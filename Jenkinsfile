@@ -12,17 +12,19 @@ pipeline {
             }
         }
 
-        stage('Build & Test') {
+        stage('Test') {
             steps {
-                sh 'mvn clean package'
+                // Just runs the tests
+                sh 'mvn clean test'
             }
         }
-    }
 
-    post {
-        always {
-            // This tells Jenkins to look for test results (JUnit format)
-            junit '**/target/surefire-reports/*.xml'
+        stage('Build') {
+            steps {
+                // build
+                // -DskipTests to avoid running them a second time.
+                sh 'mvn package'
+            }
         }
     }
 }
