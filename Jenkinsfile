@@ -14,17 +14,23 @@ pipeline {
 
         stage('Test') {
             steps {
-                // Just runs the tests
+                // 1. Clean old files and run tests
                 sh 'mvn clean test'
             }
         }
 
         stage('Build') {
             steps {
-                // build
                 // -DskipTests to avoid running them a second time.
-                sh 'mvn package'
+                sh 'mvn package -DskipTests'
             }
+        }
+    }
+
+    // draw a test reports graph in jenkins UI
+    post {
+        always {
+            junit '**/target/surefire-reports/*.xml'
         }
     }
 }
